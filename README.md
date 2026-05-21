@@ -1,6 +1,4 @@
 
-
-
 [![Website](https://img.shields.io/badge/Website-kayapater.dev-4C78A8?style=flat-square)](https://kayapater.dev)
 [![Followers](https://img.shields.io/github/followers/kayapater?style=flat-square&color=2F9E8F)](https://github.com/kayapater?tab=followers)
 [![Public Projects](https://img.shields.io/badge/Public%20Projects-Open%20Source-5A9E6F?style=flat-square)](https://github.com/kayapater?tab=repositories)
@@ -20,6 +18,17 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td><a href="https://github.com/kayapater/kayauth"><strong>kayauth</strong></a></td>
+      <td>A cross-platform authentication app built with .NET MAUI, featuring a modern XAML UI and MVVM-based architecture.</td>
+      <td>
+        <img src="https://img.shields.io/badge/C%23-68217A?style=flat-square&logo=csharp&logoColor=white" alt="C#">
+        <img src="https://img.shields.io/badge/.NET%20MAUI-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt=".NET MAUI">
+        <img src="https://img.shields.io/badge/.NET%208-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt=".NET 8">
+        <img src="https://img.shields.io/badge/XAML-0C54C2?style=flat-square" alt="XAML">
+        <img src="https://img.shields.io/badge/MVVM-2F3340?style=flat-square" alt="MVVM">
+      </td>
+    </tr>
     <tr>
       <td><a href="https://github.com/kayapater/video-downloader"><strong>video-downloader</strong></a></td>
       <td>A Windows app for downloading videos from 50+ platforms, with quality options, subtitle support, and pause/resume.</td>
