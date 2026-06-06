@@ -1,0 +1,53 @@
+name: Update streak stats
+
+"on":
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/update-streak.yml"
+      - "scripts/generate-streak.mjs"
+      - "tests/streak.test.mjs"
+
+concurrency:
+  group: update-streak-stats
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run tests
+        run: node --test
+
+      - name: Generate streak card
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/generate-streak.mjs --user "${{ github.repository_owner }}" --output assets/github-streak.svg
+
+      - name: Commit updated card
+        run: |
+          git add assets/github-streak.svg
+          if git diff --cached --quiet; then
+            echo "Streak card is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update GitHub streak stats"
+          git pull --rebase origin main
+          git push origin HEAD:main

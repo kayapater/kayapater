@@ -5,7 +5,7 @@
 
 ## GitHub Stats
 
-[![GitHub Streak](https://vercel.mcyigit.net?user=kayapater&theme=dark)](https://git.io/streak-stats)
+<img src="./assets/github-streak.svg" alt="GitHub Streak">
 
 ## Public Projects
 
