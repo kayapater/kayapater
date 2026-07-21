@@ -1,8 +1,4 @@
 
-[![Website](https://img.shields.io/badge/Website-kayapater.dev-4C78A8?style=flat-square)](https://kayapater.dev)
-[![Followers](https://img.shields.io/github/followers/kayapater?style=flat-square&color=2F9E8F)](https://github.com/kayapater?tab=followers)
-[![Public Projects](https://img.shields.io/badge/Public%20Projects-Open%20Source-5A9E6F?style=flat-square)](https://github.com/kayapater?tab=repositories)
-
 ## GitHub Stats
 
 <img src="./assets/github-streak.svg" alt="GitHub Streak">
