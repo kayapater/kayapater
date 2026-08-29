@@ -194,7 +194,7 @@ export function renderSvg(stats, accountCreatedDate, currentDate) {
 `;
 }
 
-async function requestContributionYear(user, year, token, now) {
+async function requestContributionYear(user, year, token, now, maxRetries = 3) {
   const currentYear = now.getUTCFullYear();
   const from = `${year}-01-01T00:00:00Z`;
   const to =
@@ -218,38 +218,56 @@ async function requestContributionYear(user, year, token, now) {
     }
   `;
 
-  const response = await fetch(GRAPHQL_URL, {
-    method: "POST",
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "User-Agent": "kayapater-profile-streak-generator",
-    },
-    body: JSON.stringify({
-      query,
-      variables: { login: user, from, to },
-    }),
-  });
+  let lastError = null;
+  for (let attempt = 1; attempt <= maxRetries; attempt += 1) {
+    try {
+      const response = await fetch(GRAPHQL_URL, {
+        method: "POST",
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "User-Agent": "kayapater-profile-streak-generator",
+        },
+        body: JSON.stringify({
+          query,
+          variables: { login: user, from, to },
+        }),
+      });
 
-  if (!response.ok) {
-    throw new Error(`GitHub API request failed with HTTP ${response.status}.`);
+      if (!response.ok) {
+        if (response.status >= 500 || response.status === 429) {
+          throw new Error(`GitHub API request failed with HTTP ${response.status}.`);
+        }
+        throw new Error(`GitHub API request failed with HTTP ${response.status}.`);
+      }
+
+      const payload = await response.json();
+      if (payload.errors?.length) {
+        throw new Error(
+          `GitHub GraphQL error: ${payload.errors
+            .map((error) => error.message)
+            .join("; ")}`,
+        );
+      }
+
+      if (!payload.data?.user) {
+        throw new Error(`GitHub user "${user}" was not found.`);
+      }
+
+      return payload.data.user;
+    } catch (error) {
+      lastError = error;
+      if (attempt < maxRetries && (error.message.includes("HTTP 5") || error.message.includes("HTTP 429") || error.name === "FetchError")) {
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
+      break;
+    }
   }
 
-  const payload = await response.json();
-  if (payload.errors?.length) {
-    throw new Error(
-      `GitHub GraphQL error: ${payload.errors
-        .map((error) => error.message)
-        .join("; ")}`,
-    );
-  }
-
-  if (!payload.data?.user) {
-    throw new Error(`GitHub user "${user}" was not found.`);
-  }
-
-  return payload.data.user;
+  throw lastError;
 }
 
 export async function fetchContributionData(user, token, now = new Date()) {
