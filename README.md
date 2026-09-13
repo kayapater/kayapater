@@ -121,7 +121,7 @@
     </tr>
     <tr>
       <td>
-        <a href="https://github.com/kayapater/video-downloader">
+        <a href="https://github.com/Blackswan-Yazilim/video-downloader">
           <strong>video-downloader</strong>
         </a>
       </td>
